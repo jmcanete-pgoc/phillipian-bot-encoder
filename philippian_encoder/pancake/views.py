@@ -74,6 +74,7 @@ def get_all_task_status(request):
 
         try:
             details['status'] = task.status
+            
         except Exception as e:  # Catch potential errors during status retrieval
             details['status'] = f"Error getting status: {str(e)}"  # Or a default status
             # Log the error for debugging.
@@ -129,3 +130,10 @@ def revoke_task_fetcher(request):
         set_cancel_flag(task_id, "True")
         return JsonResponse({"message": f"Cancellation signal sent to task {task_id}"})
     return JsonResponse({"message": f"Failed sending cancellation signal to task {task_id}"})
+
+
+from django.shortcuts import get_object_or_404
+def view_worker(request, object_id):
+        """Custom admin view to show worker details."""
+        worker = get_object_or_404(WorkerMonitor, id=object_id)
+        return render(request, 'pancake/view_worker.html', {'worker': worker})

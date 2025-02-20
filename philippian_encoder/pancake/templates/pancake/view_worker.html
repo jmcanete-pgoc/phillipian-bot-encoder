@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Worker Details</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>Worker ID</th>
+            <td>{{ worker.worker_id }}</td>
+        </tr>
+        <tr>
+            <th>Worker Name</th>
+            <td>{{ worker.worker_name }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ worker.worker_status }}</td>
+        </tr>
+        <tr>
+            <th>Created At</th>
+            <td>{{ worker.created_at }}</td>
+        </tr>
+        <tr>
+            <th>Updated At</th>
+            <td>{{ worker.updated_at }}</td>
+        </tr>
+    </table>
+    <a href="javascript:window.close();" class="btn btn-secondary">Close</a>
+</div>
+{% endblock %}
