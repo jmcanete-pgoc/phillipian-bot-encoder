@@ -1,0 +1,68 @@
+services:
+
+  db:
+    image: postgres:16.3-alpine3.20
+    restart: always
+    container_name: system_db
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file:
+      - ./envs/.env.local
+    ports:
+      - 5432:5432
+
+
+  redis:
+    container_name: redis
+    restart: unless-stopped
+    image: redis:alpine
+    expose:
+      - 6379
+
+  celery:
+    container_name: celery
+    build:
+      context: ./philippian_encoder
+    command: celery --app=philippian_encoder worker --loglevel=INFO --concurrency=20 --pool=eventlet #-l INFO
+    #entrypoint: ./entrypoints/entrypoint-worker.sh
+    volumes:
+      - ./philippian_encoder:/usr/src/app
+    env_file:
+      - ./envs/.env.local
+    depends_on:
+      - db
+      - django
+      - redis
+    links:
+      - django:django
+
+
+  beat:
+    container_name: celery-beat-container
+    build:
+      context: ./philippian_encoder
+    command: celery --app=philippian_encoder beat -l INFO 
+    volumes:
+      - ./philippian_encoder:/usr/src/app
+    env_file:
+      - ./envs/.env.local
+    depends_on:
+      - db
+      - django
+      - redis
+
+
+  django:
+    container_name: django
+    restart: always
+    build: 
+      context: ./philippian_encoder
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./philippian_encoder:/usr/src/app
+    ports:
+      - 8005:8000
+    env_file:
+      - ./envs/.env.local
+
+    

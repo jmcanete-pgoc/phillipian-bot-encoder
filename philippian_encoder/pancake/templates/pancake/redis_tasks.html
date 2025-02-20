@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redis Tasks</title>
+</head>
+<body>
+    <h1>Active Tasks in Redis</h1>
+
+    {% if tasks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Task Type</th>
+                    </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.task_id }}</td>
+                        <td>{{ task.type }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No active tasks found in Redis.</p>
+    {% endif %}
+
+</body>
+</html>
